@@ -1,0 +1,802 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Manifeste de Réquisition — 57e RIL</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#12140f; --panel:#1a1d15; --panel-raised:#20241a;
+    --line:#3a4130; --line-faint:#2a2f22;
+    --paper:#e7e1cd; --paper-dim:#8d9078;
+    --stencil:#c9a63c; --stencil-dim:#8a733080;
+    --danger:#a8412f; --danger-dim:#a8412f33;
+    --ok:#5c7a4f; --ok-dim:#5c7a4f33; --steel:#5a6a58;
+  }
+  *{box-sizing:border-box;}
+  body{margin:0; background:radial-gradient(ellipse at top left, #1a1d1533 0%, transparent 60%), var(--bg); color:var(--paper); font-family:'JetBrains Mono', monospace; line-height:1.5; padding:32px 16px 80px;}
+  .sheet{max-width:960px; margin:0 auto;}
+  .stamp-header{border:2px solid var(--stencil); padding:22px 26px; position:relative; margin-bottom:28px; background:repeating-linear-gradient(135deg, transparent 0 18px, #ffffff05 18px 19px), var(--panel);}
+  .stamp-header::before{content:""; position:absolute; inset:6px; border:1px solid var(--stencil-dim); pointer-events:none;}
+  .unit-line{font-family:'JetBrains Mono', monospace; font-size:11px; letter-spacing:0.1em; text-transform:uppercase; color:var(--stencil-dim); margin-bottom:10px;}
+  .stamp-header h1{font-family:'Oswald', sans-serif; font-weight:700; font-size:clamp(26px,5vw,40px); letter-spacing:0.06em; margin:0 0 4px; color:var(--stencil); text-transform:uppercase;}
+  .stamp-header p{margin:0; color:var(--paper-dim); font-size:13px; letter-spacing:0.03em;}
+  .formno{position:absolute; top:18px; right:22px; font-size:11px; color:var(--stencil-dim); text-align:right;}
+  section{border:1px solid var(--line); background:var(--panel); margin-bottom:20px;}
+  section > .sec-head{display:flex; align-items:center; justify-content:space-between; padding:12px 18px; border-bottom:1px solid var(--line); background:var(--panel-raised);}
+  section > .sec-head h2{font-family:'Oswald', sans-serif; font-weight:600; font-size:14px; letter-spacing:0.12em; text-transform:uppercase; color:var(--paper); margin:0;}
+  section > .sec-head h2 .idx{color:var(--stencil); margin-right:8px;}
+  .sec-body{padding:18px;}
+  .hint{color:var(--paper-dim); font-size:12px; margin:4px 0 14px;}
+  .toggle-row{display:flex; align-items:center; gap:14px; flex-wrap:wrap;}
+  .toggle{display:inline-flex; border:1px solid var(--line); overflow:hidden;}
+  .toggle button{background:transparent; border:none; color:var(--paper-dim); font-family:'JetBrains Mono',monospace; font-size:12px; font-weight:700; letter-spacing:0.08em; text-transform:uppercase; padding:9px 16px; cursor:pointer; transition:background .15s, color .15s;}
+  .toggle button.active{background:var(--stencil); color:#12140f;}
+  .toggle button:not(.active):hover{background:var(--line-faint); color:var(--paper);}
+  .mpf-note{font-size:11.5px; color:var(--paper-dim);}
+  .mpf-note b{color:var(--stencil);}
+  .settings-grid{display:grid; grid-template-columns:repeat(auto-fit,minmax(150px,1fr)); gap:10px 16px; margin-top:6px;}
+  .field label{display:block; font-size:10.5px; letter-spacing:0.08em; text-transform:uppercase; color:var(--paper-dim); margin-bottom:4px;}
+  input[type=number], input[type=text], input[type=url], select{width:100%; background:#0f110c; border:1px solid var(--line); color:var(--paper); font-family:'JetBrains Mono',monospace; font-size:13px; padding:8px 9px;}
+  input:focus, select:focus{outline:1px solid var(--stencil); border-color:var(--stencil);}
+  table{width:100%; border-collapse:collapse; font-size:12.5px; table-layout:fixed;}
+  th{text-align:left; font-size:10px; letter-spacing:0.08em; text-transform:uppercase; color:var(--paper-dim); font-weight:600; padding:6px 8px; border-bottom:1px solid var(--line);}
+  td{padding:5px 8px; border-bottom:1px solid var(--line-faint);}
+  td input{padding:5px 6px; font-size:12.5px; width:100%; box-sizing:border-box;}
+  input[type=number]::-webkit-inner-spin-button, input[type=number]::-webkit-outer-spin-button{-webkit-appearance:none; margin:0;}
+  input[type=number]{-moz-appearance:textfield;}
+  .col-name{width:auto;}
+  .col-num{width:104px;}
+  .col-title{width:150px;}
+  .col-cat{width:130px;}
+  .rowbtn{background:none; border:1px solid var(--line); color:var(--danger); cursor:pointer; font-size:14px; line-height:1; padding:4px 8px;}
+  .rowbtn:hover{background:var(--danger-dim);}
+  .db-actions{display:flex; gap:10px; margin-top:12px; flex-wrap:wrap;}
+  button.btn{font-family:'JetBrains Mono',monospace; font-weight:700; font-size:11.5px; letter-spacing:0.08em; text-transform:uppercase; background:transparent; color:var(--paper); border:1px solid var(--line); padding:9px 14px; cursor:pointer; transition:border-color .15s, color .15s;}
+  button.btn:hover{border-color:var(--stencil); color:var(--stencil);}
+  button.btn.primary{background:var(--stencil); color:#12140f; border-color:var(--stencil);}
+  button.btn.primary:hover{background:#dbb84a;}
+  button.btn.small{padding:6px 10px; font-size:10.5px;}
+  textarea{width:100%; min-height:90px; background:#0f110c; border:1px solid var(--line); color:var(--paper); font-family:'JetBrains Mono',monospace; font-size:11.5px; padding:8px;}
+  .order-add{display:flex; gap:10px; align-items:flex-end; flex-wrap:wrap; margin-bottom:14px;}
+  .order-add .field{flex:1; min-width:160px;}
+  .order-add .field.qty{max-width:100px; flex:none;}
+  .manifest-line{display:flex; justify-content:space-between; align-items:center; padding:9px 4px; border-bottom:1px dotted var(--line);}
+  .manifest-line .li-name{color:var(--paper);}
+  .manifest-line .li-qty{color:var(--stencil); font-weight:700; margin-left:10px;}
+  .empty-note{color:var(--paper-dim); font-size:12.5px; font-style:italic; padding:10px 4px;}
+  .mats-grid{display:grid; grid-template-columns:repeat(auto-fit,minmax(190px,1fr)); gap:1px; background:var(--line);}
+  .mat-tile{background:var(--panel); padding:14px 16px;}
+  .mat-tile .mat-label{font-size:10.5px; letter-spacing:0.1em; text-transform:uppercase; color:var(--paper-dim);}
+  .mat-tile .mat-need{font-family:'Oswald',sans-serif; font-size:26px; font-weight:600; color:var(--paper); margin:2px 0;}
+  .mat-tile .mat-sub{font-size:11px; color:var(--steel);}
+  .mat-tile .mat-sub .surplus{color:var(--ok);}
+  .suggest-controls{display:flex; gap:10px; margin-bottom:10px; flex-wrap:wrap;}
+  .suggest-controls input{flex:1; min-width:160px;}
+  .suggest-controls select{max-width:200px;}
+  .suggest-item{display:flex; justify-content:space-between; align-items:center; padding:8px 4px; border-bottom:1px dotted var(--line); font-size:12.5px; cursor:pointer;}
+  .suggest-item input[type=checkbox]{width:auto; margin-right:8px;}
+  .suggest-item .s-name{color:var(--paper);}
+  .suggest-item .s-fit{color:var(--paper-dim); flex-shrink:0; margin-left:10px;}
+  .dispatch-row{display:flex; gap:10px; flex-wrap:wrap; align-items:flex-end;}
+  .dispatch-row .field{flex:1; min-width:220px;}
+  .dispatch-block{border-top:1px dotted var(--line); padding-top:16px; margin-top:16px;}
+  .dispatch-block:first-child{border-top:none; padding-top:0; margin-top:0;}
+  .dispatch-block h3{font-family:'Oswald',sans-serif; font-size:12.5px; letter-spacing:0.08em; text-transform:uppercase; color:var(--stencil); margin:0 0 8px;}
+  .status-line{font-size:12px; margin-top:10px; min-height:16px;}
+  .status-line.ok{color:var(--ok);}
+  .status-line.err{color:var(--danger);}
+  .status-line.pending{color:var(--stencil);}
+  .remember-row{display:flex; align-items:center; gap:6px; font-size:11px; color:var(--paper-dim); margin-top:6px;}
+  .remember-row input[type=checkbox]{width:auto;}
+  .remember-row .rowbtn{margin-left:auto; font-size:10px; padding:2px 8px;}
+  details summary{cursor:pointer; font-size:11.5px; color:var(--paper-dim); letter-spacing:0.05em; margin-top:10px;}
+  details summary:hover{color:var(--paper);}
+  pre{white-space:pre-wrap; font-size:11px; color:var(--paper-dim); background:#0f110c; border:1px solid var(--line-faint); padding:10px; margin-top:8px;}
+  footer{margin-top:30px; font-size:11px; color:var(--steel); text-align:center; letter-spacing:0.03em;}
+  .id-row{display:flex; align-items:center; gap:12px; flex-wrap:wrap;}
+  .id-badge{font-size:12.5px; color:var(--stencil);}
+  .gate{max-width:480px; margin:80px auto; text-align:center; border:2px solid var(--stencil); padding:30px; background:var(--panel);}
+  .gate h2{font-family:'Oswald',sans-serif; color:var(--stencil); letter-spacing:0.08em; text-transform:uppercase; margin-top:0;}
+  .gate p{color:var(--paper-dim); font-size:13px;}
+  .lock-toggle{display:flex; align-items:center; gap:6px; font-size:11px; color:var(--paper-dim); letter-spacing:0.05em; text-transform:uppercase; cursor:pointer; white-space:nowrap;}
+  .lock-toggle input{width:auto;}
+  input:disabled, select:disabled, button:disabled{opacity:0.4; cursor:not-allowed;}
+  .sec-head-right{display:flex; align-items:center; gap:16px;}
+  .motto{font-style:italic; font-size:12px; color:var(--stencil-dim); margin-top:10px;}
+  .timestamp-line{font-size:11px; color:var(--paper-dim); margin-top:6px;}
+  .li-controls{display:flex; align-items:center; gap:6px;}
+  .stepper-btn{padding:3px 9px; font-size:13px;}
+  .copy-btn-row{display:flex; justify-content:flex-end; margin-top:8px;}
+</style>
+</head>
+<body>
+<div class="sheet">
+
+  <div id="gateScreen" style="display:none;">
+    <div class="gate">
+      <h2>Accès Restreint</h2>
+      <p id="gateMessage">Cet outil est réservé aux membres possédant le rôle requis sur le serveur Discord du régiment.</p>
+      <button class="btn primary" id="loginBtn">Se connecter avec Discord</button>
+    </div>
+  </div>
+
+  <div id="mainContent">
+  <div class="stamp-header">
+    <div class="formno">FORMULAIRE RM&#8209;3<br>RÉV. COPIE DE TERRAIN</div>
+    <div class="unit-line">57e Régiment d'Infanterie de Ligne &mdash; &laquo; Les Téméraires &raquo;</div>
+    <h1>Manifeste de Réquisition</h1>
+    <p>Calculateur de fabrication et de matériaux — arrondi aux caisses, remise MPF, réaffectation du surplus</p>
+    <div class="motto" id="mottoLine"></div>
+    <div class="timestamp-line" id="timestampLine"></div>
+  </div>
+
+  <section>
+    <div class="sec-head"><h2><span class="idx">01</span>Mode de Production</h2><label class="lock-toggle"><input type="checkbox" id="lockProd"> Verrouillé</label></div>
+    <div class="sec-body">
+      <div class="toggle-row">
+        <div class="toggle" id="modeToggle">
+          <button data-mode="regular" class="active">Usine Standard</button>
+          <button data-mode="mpf">MPF</button>
+        </div>
+        <span class="mpf-note" id="mpfNote">Aucune remise de masse appliquée.</span>
+      </div>
+      <div class="settings-grid" style="margin-top:16px;">
+        <div class="field"><label>Taille caisse Bmat</label><input type="number" id="crateBmat" value="100"></div>
+        <div class="field"><label>Taille caisse Rmat</label><input type="number" id="crateRmat" value="50"></div>
+        <div class="field"><label>Taille caisse Emat</label><input type="number" id="crateEmat" value="50"></div>
+        <div class="field"><label>Taille caisse Hemat</label><input type="number" id="crateHemat" value="15"></div>
+        <div class="field"><label>Caisses max / file MPF</label><input type="number" id="maxCrates" value="9"></div>
+      </div>
+      <p class="hint">Valeurs d'exemple — ajustez selon le patch actuel, ou reprenez-les depuis votre catalog.json.</p>
+    </div>
+  </section>
+
+  <section>
+    <div class="sec-head"><h2><span class="idx">02</span>Base d'Objets</h2><div class="sec-head-right"><span class="hint" style="margin:0;">coûts par caisse produite</span><label class="lock-toggle"><input type="checkbox" id="lockDb"> Verrouillé</label></div></div>
+    <div class="sec-body">
+      <p class="hint">Lignes d'exemple uniquement — remplacez-les, ou via Importer JSON depuis votre catalog.json.</p>
+      <table id="dbTable">
+        <thead><tr><th class="col-name">Objet</th><th class="col-cat">Catégorie</th><th class="col-num">Bmat</th><th class="col-num">Rmat</th><th class="col-num">Emat</th><th class="col-num">Hemat</th><th style="width:36px;"></th></tr></thead>
+        <tbody id="dbBody"></tbody>
+      </table>
+      <div class="db-actions">
+        <button class="btn small" id="addRowBtn">+ Ajouter un Objet</button>
+        <button class="btn small" id="exportBtn">Exporter JSON</button>
+        <button class="btn small" id="importBtn">Importer JSON</button>
+      </div>
+      <textarea id="importArea" style="display:none; margin-top:10px;" placeholder="Collez ici le JSON de la base d'objets, puis cliquez sur Appliquer."></textarea>
+      <button class="btn small" id="applyImportBtn" style="display:none; margin-top:8px;">Appliquer</button>
+    </div>
+  </section>
+
+  <section>
+    <div class="sec-head"><h2><span class="idx">03</span>Lignes de Commande</h2><button class="btn small" id="clearManifestBtn">Vider le manifeste</button></div>
+    <div class="sec-body">
+      <div class="suggest-controls">
+        <input type="text" id="orderSearch" placeholder="Rechercher un objet...">
+        <select id="orderCategoryFilter"></select>
+      </div>
+      <div class="order-add">
+        <div class="field"><label>Objet</label><select id="itemSelect"></select></div>
+        <div class="field qty"><label>Caisses</label><input type="number" id="qtyInput" value="1" min="1"></div>
+        <button class="btn primary" id="addLineBtn">Ajouter au Manifeste</button>
+      </div>
+      <div id="lineList"></div>
+    </div>
+  </section>
+
+  <section>
+    <div class="sec-head"><h2><span class="idx">04</span>Total Requis</h2></div>
+    <div class="sec-body"><div class="mats-grid" id="matsGrid"></div></div>
+  </section>
+
+  <section>
+    <div class="sec-head"><h2><span class="idx">05</span>Surplus &mdash; Utilisation Suggérée</h2></div>
+    <div class="sec-body">
+      <p class="hint">Ce qui tient dans le surplus après arrondi aux caisses entières. Les 3 premiers sont précochés — cherchez ou filtrez pour en trouver d'autres, cochez ceux que vous voulez réellement inclure dans un envoi.</p>
+      <div class="suggest-controls">
+        <input type="text" id="suggestSearch" placeholder="Rechercher un objet...">
+        <select id="suggestCategoryFilter"></select>
+      </div>
+      <div id="suggestList"></div>
+    </div>
+  </section>
+
+  <section>
+    <div class="sec-head"><h2><span class="idx">06</span>Effectif</h2></div>
+    <div class="sec-body">
+      <p class="hint">Officiers et leurs titres. Conservé dans ce navigateur et, si présent, chargé automatiquement depuis un fichier <code>roster.json</code> servi à côté de cette page.</p>
+      <div class="id-row" style="margin-bottom:14px;">
+        <div class="field" style="max-width:260px;"><label>Agit en tant que</label><select id="officerSelect"></select></div>
+        <span class="id-badge" id="identityBadge"></span>
+      </div>
+      <details>
+        <summary>Gérer l'effectif</summary>
+        <table id="rosterTable" style="margin-top:10px;">
+          <thead><tr><th class="col-name">Nom</th><th class="col-title">Titre</th><th style="width:36px;"></th></tr></thead>
+          <tbody id="rosterBody"></tbody>
+        </table>
+        <div class="db-actions">
+          <button class="btn small" id="addOfficerBtn">+ Ajouter un Officier</button>
+          <button class="btn small" id="exportRosterBtn">Exporter JSON</button>
+          <button class="btn small" id="importRosterBtn">Importer JSON</button>
+        </div>
+        <textarea id="importRosterArea" style="display:none; margin-top:10px;" placeholder='[{"name":"Scorpion","title":"Officier"}]'></textarea>
+        <button class="btn small" id="applyImportRosterBtn" style="display:none; margin-top:8px;">Appliquer</button>
+      </details>
+    </div>
+  </section>
+
+  <section>
+    <div class="sec-head"><h2><span class="idx">07</span>Transmission</h2></div>
+    <div class="sec-body">
+
+      <div class="dispatch-block">
+        <h3>Envoyer un message</h3>
+        <div class="dispatch-row">
+          <div class="field"><label>URL webhook Discord</label><input type="url" id="webhookUrlMsg" placeholder="https://discord.com/api/webhooks/..."></div>
+          <button class="btn primary" id="sendMsgBtn">Envoyer</button>
+        </div>
+        <label class="remember-row"><input type="checkbox" id="rememberMsg"> Se souvenir sur cet appareil <button type="button" class="rowbtn" id="forgetMsg">oublier</button></label>
+        <div class="status-line" id="statusMsg"></div>
+      </div>
+
+      <div class="dispatch-block">
+        <h3>Créer un ticket de réquisition</h3>
+        <p class="hint">Visez le webhook d'un canal Forum — cela ouvre un nouveau ticket.</p>
+        <div class="settings-grid" style="margin-bottom:10px;">
+          <div class="field"><label>Bmat déjà en stock</label><input type="number" id="onHandBmat" value="0"></div>
+          <div class="field"><label>Rmat déjà en stock</label><input type="number" id="onHandRmat" value="0"></div>
+          <div class="field"><label>Emat déjà en stock</label><input type="number" id="onHandEmat" value="0"></div>
+          <div class="field"><label>Hemat déjà en stock</label><input type="number" id="onHandHemat" value="0"></div>
+        </div>
+        <p class="hint">Relevez ces chiffres sur le dernier scan de stock et entrez-les ici — le ticket ne demandera que ce qui manque réellement, arrondi aux caisses. Laissez à 0 pour demander la totalité.</p>
+        <div class="dispatch-row">
+          <div class="field"><label>URL webhook Discord (canal Forum)</label><input type="url" id="webhookUrlTicket" placeholder="https://discord.com/api/webhooks/..."></div>
+        </div>
+        <label class="remember-row"><input type="checkbox" id="rememberTicket"> Se souvenir sur cet appareil <button type="button" class="rowbtn" id="forgetTicket">oublier</button></label>
+        <div class="dispatch-row" style="margin-top:10px;">
+          <div class="field"><label>IDs des tags à appliquer (optionnel, séparés par virgules)</label><input type="text" id="tagIds" placeholder="1234567890,1234567891"></div>
+          <button class="btn primary" id="sendTicketBtn">Créer le ticket</button>
+        </div>
+        <div class="status-line" id="statusTicket"></div>
+      </div>
+
+      <details open>
+        <summary>Aperçu du texte envoyé</summary>
+        <pre id="plainPreview"></pre>
+        <div class="copy-btn-row"><button class="btn small" id="copyTextBtn">Copier en texte</button></div>
+      </details>
+      <details>
+        <summary>Aperçu technique (JSON)</summary>
+        <pre id="payloadPreview"></pre>
+      </details>
+      <p class="hint" style="margin-top:10px;">Les URL webhook restent en mémoire de page uniquement, sauf si « se souvenir sur cet appareil » est coché.</p>
+    </div>
+  </section>
+
+  <footer>57e RIL &laquo; LES TÉMÉRAIRES &raquo; &middot; MANIFESTE DE RÉQUISITION &middot; COPIE DE TERRAIN &middot; NON CLASSIFIÉ</footer>
+  </div>
+</div>
+
+<script>
+const OAUTH_ENABLED = false;
+const DISCORD_CLIENT_ID = "VOTRE_CLIENT_ID";
+const DISCORD_GUILD_ID = "VOTRE_GUILD_ID";
+const DISCORD_REQUIRED_ROLE_ID = "VOTRE_ROLE_ID";
+const REDIRECT_URI = window.location.origin + window.location.pathname;
+
+let itemDB = [
+  {name:"Exemple : Bandages", category:"Équipement Utilitaire", bmat:8, rmat:0, emat:0, hemat:0},
+  {name:"Exemple : Munitions 7.62mm", category:"Munitions", bmat:12, rmat:0, emat:2, hemat:0},
+  {name:"Exemple : Fusil Warden", category:"Armes Légères", bmat:35, rmat:5, emat:0, hemat:0},
+  {name:"Exemple : Obus HE 68mm", category:"Munitions Lourdes", bmat:20, rmat:8, emat:4, hemat:1},
+  {name:"Exemple : Caisse de Char Léger", category:"Véhicules", bmat:120, rmat:60, emat:10, hemat:6},
+];
+let orderLines = [];
+let mode = "regular";
+let roster = [{name:"Scorpion", title:"Officier"},{name:"Cragoss", title:"Sergent"}];
+let identityLocked = null;
+let selectedSuggestionNames = new Set();
+let suggestionsInitialized = false;
+let dbLocked = true;
+
+const dbBody = document.getElementById('dbBody');
+const itemSelect = document.getElementById('itemSelect');
+const lineList = document.getElementById('lineList');
+const matsGrid = document.getElementById('matsGrid');
+const suggestList = document.getElementById('suggestList');
+const payloadPreview = document.getElementById('payloadPreview');
+const mpfNote = document.getElementById('mpfNote');
+const rosterBody = document.getElementById('rosterBody');
+const officerSelect = document.getElementById('officerSelect');
+const identityBadge = document.getElementById('identityBadge');
+
+function crateSizes(){
+  return {
+    bmat: Number(document.getElementById('crateBmat').value)||1, rmat: Number(document.getElementById('crateRmat').value)||1,
+    emat: Number(document.getElementById('crateEmat').value)||1, hemat: Number(document.getElementById('crateHemat').value)||1,
+  };
+}
+function maxCratesPerQueue(){ return Number(document.getElementById('maxCrates').value)||9; }
+function escapeAttr(s){ return String(s).replace(/"/g,'&quot;'); }
+
+// Swap these for whatever your regiment wants — one is picked at random on each page load.
+const MOTTOS = [
+  "Valeur et Discipline — devise de l'Armée de Terre.",
+  "Honneur et Patrie.",
+  "On ne passe pas.",
+  "Qui s'y frotte s'y pique.",
+  "La logistique gagne les guerres que le courage seul ne peut gagner.",
+  "Une caisse à temps vaut mieux qu'un renfort en retard.",
+  "Le régiment marche sur son ravitaillement autant que sur ses jambes.",
+];
+function renderMotto(){ document.getElementById('mottoLine').textContent = '« ' + MOTTOS[Math.floor(Math.random()*MOTTOS.length)] + ' »'; }
+function renderTimestamp(){
+  const now = new Date();
+  document.getElementById('timestampLine').textContent = `Rédigé le ${now.toLocaleDateString('fr-FR')} à ${now.toLocaleTimeString('fr-FR',{hour:'2-digit',minute:'2-digit'})}`;
+}
+
+function saveDraft(){
+  const draft = orderLines.map(l=>{ const it=itemDB[l.itemIndex]; return it?{name:it.name, crates:l.crates}:null; }).filter(Boolean);
+  localStorage.setItem('fh_draft_manifest', JSON.stringify(draft));
+}
+function loadDraft(){
+  try{
+    const draft = JSON.parse(localStorage.getItem('fh_draft_manifest')||'[]');
+    orderLines = draft.map(d=>{ const idx = itemDB.findIndex(it=>it.name===d.name); return idx>=0 ? {itemIndex:idx, crates:d.crates} : null; }).filter(Boolean);
+  }catch(e){ orderLines = []; }
+}
+
+document.getElementById('modeToggle').addEventListener('click', e=>{
+  const btn = e.target.closest('button[data-mode]');
+  if(!btn) return;
+  mode = btn.dataset.mode;
+  document.querySelectorAll('#modeToggle button').forEach(b=>b.classList.toggle('active', b===btn));
+  mpfNote.innerHTML = mode==='mpf'
+    ? 'La remise s\'applique selon la <b>position de la caisse</b> dans la file : -10% sur la 1ère ... plafonnée à -50% à partir de la 5ème.'
+    : 'Aucune remise de masse appliquée.';
+  render();
+});
+
+function renderDB(){
+  dbBody.innerHTML = '';
+  itemDB.forEach((it, i)=>{
+    const tr = document.createElement('tr');
+    tr.innerHTML = `<td class="col-name"><input type="text" data-i="${i}" data-f="name" value="${escapeAttr(it.name)}"></td>
+      <td><input type="text" class="col-cat" data-i="${i}" data-f="category" value="${escapeAttr(it.category||'')}"></td>
+      <td><input type="number" class="col-num" data-i="${i}" data-f="bmat" value="${it.bmat}"></td>
+      <td><input type="number" class="col-num" data-i="${i}" data-f="rmat" value="${it.rmat}"></td>
+      <td><input type="number" class="col-num" data-i="${i}" data-f="emat" value="${it.emat}"></td>
+      <td><input type="number" class="col-num" data-i="${i}" data-f="hemat" value="${it.hemat}"></td>
+      <td><button class="rowbtn" data-del="${i}">&times;</button></td>`;
+    dbBody.appendChild(tr);
+  });
+  dbBody.querySelectorAll('input').forEach(inp=>{
+    inp.addEventListener('input', ()=>{
+      const i = Number(inp.dataset.i), f = inp.dataset.f;
+      itemDB[i][f] = (f==='name'||f==='category') ? inp.value : Number(inp.value)||0;
+      renderItemSelect(); render();
+    });
+  });
+  dbBody.querySelectorAll('[data-del]').forEach(b=>{
+    b.addEventListener('click', ()=>{
+      const i = Number(b.dataset.del);
+      if(!confirm('Supprimer « '+itemDB[i].name+' » de la base d\'objets ?')) return;
+      itemDB.splice(i,1);
+      orderLines = orderLines.filter(l=>l.itemIndex!==i).map(l=>({...l, itemIndex: l.itemIndex>i?l.itemIndex-1:l.itemIndex}));
+      renderDB(); renderItemSelect(); render();
+    });
+  });
+  dbBody.querySelectorAll('input, button').forEach(el=>{ el.disabled = dbLocked; });
+}
+function renderItemSelect(){
+  const cats = Array.from(new Set(itemDB.map(it=>it.category||'Sans catégorie'))).sort();
+  const catSelect = document.getElementById('orderCategoryFilter');
+  const prevCat = catSelect.value || 'Toutes';
+  catSelect.innerHTML = ['Toutes',...cats].map(c=>`<option value="${escapeAttr(c)}">${c}</option>`).join('');
+  catSelect.value = (prevCat==='Toutes' || cats.includes(prevCat)) ? prevCat : 'Toutes';
+
+  const search = (document.getElementById('orderSearch').value||'').trim().toLowerCase();
+  const catFilter = catSelect.value;
+  const prevSelection = itemSelect.value;
+  const filtered = itemDB.map((it,i)=>({it,i})).filter(({it})=>{
+    const cat = it.category || 'Sans catégorie';
+    return (!search || it.name.toLowerCase().includes(search)) && (catFilter==='Toutes' || cat===catFilter);
+  });
+  itemSelect.innerHTML = filtered.length
+    ? filtered.map(({it,i})=>`<option value="${i}">${it.name}</option>`).join('')
+    : '<option value="">Aucun résultat</option>';
+  if(filtered.some(({i})=>String(i)===prevSelection)) itemSelect.value = prevSelection;
+}
+document.getElementById('orderSearch').addEventListener('input', renderItemSelect);
+document.getElementById('orderCategoryFilter').addEventListener('change', renderItemSelect);
+
+document.getElementById('addRowBtn').addEventListener('click', ()=>{ itemDB.push({name:"Nouvel Objet", category:"", bmat:0, rmat:0, emat:0, hemat:0}); renderDB(); renderItemSelect(); });
+document.getElementById('exportBtn').addEventListener('click', ()=>{
+  const blob = new Blob([JSON.stringify(itemDB,null,2)], {type:'application/json'});
+  const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = 'base-objets.json'; a.click();
+});
+document.getElementById('importBtn').addEventListener('click', ()=>{
+  const area = document.getElementById('importArea'), applyBtn = document.getElementById('applyImportBtn');
+  const show = area.style.display === 'none';
+  area.style.display = show ? 'block' : 'none'; applyBtn.style.display = show ? 'inline-block' : 'none';
+});
+document.getElementById('applyImportBtn').addEventListener('click', ()=>{
+  try{
+    const parsed = JSON.parse(document.getElementById('importArea').value);
+    if(!Array.isArray(parsed)) throw new Error('Un tableau JSON d\'objets est attendu.');
+    itemDB = parsed.map(it=>({
+      name: it.name || it.item || 'Sans nom', category: it.category || it.type || '',
+      bmat: Number(it.bmat ?? it.Bmat ?? 0), rmat: Number(it.rmat ?? it.Rmat ?? 0),
+      emat: Number(it.emat ?? it.Emat ?? 0), hemat: Number(it.hemat ?? it.Hemat ?? 0),
+    }));
+    orderLines = []; suggestionsInitialized = false; selectedSuggestionNames = new Set();
+    renderDB(); renderItemSelect(); render();
+    document.getElementById('importArea').style.display='none';
+    document.getElementById('applyImportBtn').style.display='none';
+  }catch(e){ alert('Impossible d\'interpréter ceci comme une liste d\'objets : '+e.message); }
+});
+
+function addLineToManifest(){
+  if(!itemSelect.value) return;
+  const idx = Number(itemSelect.value);
+  const qty = Math.max(1, Number(document.getElementById('qtyInput').value)||1);
+  if(Number.isNaN(idx) || !itemDB[idx]) return;
+  const existing = orderLines.find(l=>l.itemIndex===idx);
+  if(existing) existing.crates += qty; else orderLines.push({itemIndex:idx, crates:qty});
+  render();
+}
+document.getElementById('addLineBtn').addEventListener('click', addLineToManifest);
+['orderSearch','qtyInput'].forEach(id=>{
+  document.getElementById(id).addEventListener('keydown', e=>{ if(e.key==='Enter'){ e.preventDefault(); addLineToManifest(); } });
+});
+document.getElementById('clearManifestBtn').addEventListener('click', ()=>{ orderLines = []; render(); });
+function renderLines(){
+  if(orderLines.length===0){ lineList.innerHTML = '<div class="empty-note">Aucune ligne sur le manifeste.</div>'; return; }
+  lineList.innerHTML = orderLines.map((l,li)=>{
+    const it = itemDB[l.itemIndex];
+    return `<div class="manifest-line"><span class="li-name">${it ? it.name : '(objet supprimé)'}</span>
+      <span class="li-controls">
+        <button class="rowbtn stepper-btn" data-step="-1" data-li="${li}">&minus;</button>
+        <span class="li-qty">${l.crates} caisse${l.crates===1?'':'s'}</span>
+        <button class="rowbtn stepper-btn" data-step="1" data-li="${li}">+</button>
+        <button class="rowbtn" style="margin-left:10px;" data-rmline="${li}">&times;</button>
+      </span></div>`;
+  }).join('');
+  lineList.querySelectorAll('[data-step]').forEach(b=>{
+    b.addEventListener('click', ()=>{
+      const li = Number(b.dataset.li), delta = Number(b.dataset.step);
+      orderLines[li].crates = Math.max(1, orderLines[li].crates + delta);
+      render();
+    });
+  });
+  lineList.querySelectorAll('[data-rmline]').forEach(b=>{ b.addEventListener('click', ()=>{ orderLines.splice(Number(b.dataset.rmline),1); render(); }); });
+}
+
+function discountMultiplierForCratePosition(pos){ return Math.max(1 - Math.min(pos,5)*0.1, 0.5); }
+function costForCrates(item, crates, mpfOn, maxQ){
+  if(!mpfOn){ return {bmat:item.bmat*crates, rmat:item.rmat*crates, emat:item.emat*crates, hemat:item.hemat*crates}; }
+  let bmat=0, rmat=0, emat=0, hemat=0, remaining = crates;
+  while(remaining>0){
+    const thisQueue = Math.min(remaining, maxQ);
+    for(let pos=1; pos<=thisQueue; pos++){
+      const m = discountMultiplierForCratePosition(pos);
+      bmat += item.bmat*m; rmat += item.rmat*m; emat += item.emat*m; hemat += item.hemat*m;
+    }
+    remaining -= thisQueue;
+  }
+  return {bmat,rmat,emat,hemat};
+}
+
+function renderRoster(){
+  rosterBody.innerHTML = roster.map((o,i)=>`<tr>
+    <td class="col-name"><input type="text" data-ri="${i}" data-rf="name" value="${escapeAttr(o.name)}"></td>
+    <td class="col-title"><input type="text" data-ri="${i}" data-rf="title" value="${escapeAttr(o.title)}"></td>
+    <td><button class="rowbtn" data-rdel="${i}">&times;</button></td></tr>`).join('');
+  rosterBody.querySelectorAll('input').forEach(inp=>{
+    inp.addEventListener('input', ()=>{ roster[Number(inp.dataset.ri)][inp.dataset.rf] = inp.value; renderOfficerSelect(); });
+  });
+  rosterBody.querySelectorAll('[data-rdel]').forEach(b=>{
+    b.addEventListener('click', ()=>{ roster.splice(Number(b.dataset.rdel),1); renderRoster(); renderOfficerSelect(); });
+  });
+}
+function renderOfficerSelect(){
+  officerSelect.innerHTML = roster.map((o,i)=>`<option value="${i}">${o.title} ${o.name}</option>`).join('');
+  const saved = localStorage.getItem('fh_last_officer');
+  if(saved!==null && roster[Number(saved)]) officerSelect.value = saved;
+}
+officerSelect.addEventListener('change', ()=>localStorage.setItem('fh_last_officer', officerSelect.value));
+document.getElementById('addOfficerBtn').addEventListener('click', ()=>{ roster.push({name:"Nouvel Officier", title:"Officier"}); renderRoster(); renderOfficerSelect(); });
+document.getElementById('exportRosterBtn').addEventListener('click', ()=>{
+  const blob = new Blob([JSON.stringify(roster,null,2)], {type:'application/json'});
+  const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = 'effectif.json'; a.click();
+});
+document.getElementById('importRosterBtn').addEventListener('click', ()=>{
+  const area = document.getElementById('importRosterArea'), btn = document.getElementById('applyImportRosterBtn');
+  const show = area.style.display === 'none'; area.style.display = show?'block':'none'; btn.style.display = show?'inline-block':'none';
+});
+document.getElementById('applyImportRosterBtn').addEventListener('click', ()=>{
+  try{
+    const parsed = JSON.parse(document.getElementById('importRosterArea').value);
+    if(!Array.isArray(parsed)) throw new Error('Un tableau JSON est attendu.');
+    roster = parsed.map(o=>({name:o.name||'Sans nom', title:o.title||'Officier'}));
+    renderRoster(); renderOfficerSelect();
+    document.getElementById('importRosterArea').style.display='none';
+    document.getElementById('applyImportRosterBtn').style.display='none';
+  }catch(e){ alert('Impossible d\'interpréter ceci comme un effectif : '+e.message); }
+});
+function currentIdentity(){
+  if(identityLocked) return identityLocked;
+  const o = roster[Number(officerSelect.value)];
+  return o ? {name:o.name, title:o.title} : {name:'Inconnu', title:'Officier'};
+}
+fetch('./roster.json').then(r=>r.ok?r.json():null).then(data=>{
+  if(Array.isArray(data) && data.length){ roster = data.map(o=>({name:o.name||'Sans nom', title:o.title||'Officier'})); renderRoster(); renderOfficerSelect(); }
+}).catch(()=>{});
+
+let lastTotals=null, lastLeftover=null, lastCandidates=[];
+function render(){
+  renderLines();
+  const mpfOn = mode==='mpf', maxQ = maxCratesPerQueue();
+  const totals = {bmat:0, rmat:0, emat:0, hemat:0};
+  orderLines.forEach(l=>{
+    const it = itemDB[l.itemIndex]; if(!it) return;
+    const c = costForCrates(it, l.crates, mpfOn, maxQ);
+    totals.bmat+=c.bmat; totals.rmat+=c.rmat; totals.emat+=c.emat; totals.hemat+=c.hemat;
+  });
+  const sizes = crateSizes(); const rounded={}, leftover={};
+  ['bmat','rmat','emat','hemat'].forEach(m=>{
+    const crates = Math.ceil(totals[m]/sizes[m]);
+    rounded[m]=crates*sizes[m]; leftover[m]=Math.max(0, rounded[m]-totals[m]);
+  });
+  matsGrid.innerHTML = ['bmat','rmat','emat','hemat'].map(m=>{
+    const need=Math.round(totals[m]*10)/10, gather=rounded[m], lo=Math.round(leftover[m]*10)/10;
+    return `<div class="mat-tile"><div class="mat-label">${m}</div><div class="mat-need">${need}</div>
+      <div class="mat-sub">récolter ${gather} (${gather/sizes[m]} caisse${gather/sizes[m]===1?'':'s'}) &middot; <span class="surplus">+${lo} surplus</span></div></div>`;
+  }).join('');
+
+  lastCandidates = itemDB.map((it)=>{
+    const usable = ['bmat','rmat','emat','hemat'].filter(m=>it[m]>0);
+    if(usable.length===0) return null;
+    let maxFit = Infinity;
+    usable.forEach(m=>{ maxFit = Math.min(maxFit, Math.floor(leftover[m]/it[m])); });
+    if(!isFinite(maxFit) || maxFit<1) return null;
+    const value = usable.reduce((s,m)=>s+it[m]*maxFit,0);
+    return {name:it.name, fit:maxFit, value};
+  }).filter(Boolean).sort((a,b)=>b.value-a.value);
+
+  if(!suggestionsInitialized && lastCandidates.length){
+    lastCandidates.slice(0,3).forEach(c=>selectedSuggestionNames.add(c.name));
+    suggestionsInitialized = true;
+  }
+  lastTotals=totals; lastLeftover=leftover;
+  renderSuggestions();
+  updatePayloadPreview();
+  saveDraft();
+}
+
+function renderSuggestions(){
+  const cats = Array.from(new Set(itemDB.map(it=>it.category||'Sans catégorie'))).sort();
+  const catSelect = document.getElementById('suggestCategoryFilter');
+  const prevCat = catSelect.value || 'Toutes';
+  catSelect.innerHTML = ['Toutes',...cats].map(c=>`<option value="${escapeAttr(c)}">${c}</option>`).join('');
+  catSelect.value = (prevCat==='Toutes' || cats.includes(prevCat)) ? prevCat : 'Toutes';
+
+  const search = document.getElementById('suggestSearch').value.trim().toLowerCase();
+  const catFilter = catSelect.value;
+  const filtered = lastCandidates.filter(c=>{
+    const it = itemDB.find(i=>i.name===c.name);
+    const cat = it ? (it.category||'Sans catégorie') : 'Sans catégorie';
+    return (!search || c.name.toLowerCase().includes(search)) && (catFilter==='Toutes' || cat===catFilter);
+  });
+  suggestList.innerHTML = filtered.length ? filtered.map(c=>`
+    <label class="suggest-item">
+      <span><input type="checkbox" data-sugname="${escapeAttr(c.name)}" ${selectedSuggestionNames.has(c.name)?'checked':''}>${c.name}</span>
+      <span class="s-fit">+${c.fit} caisse${c.fit===1?'':'s'} possibles</span>
+    </label>`).join('') : '<div class="empty-note">Aucun résultat — ou le manifeste est vide.</div>';
+  suggestList.querySelectorAll('[data-sugname]').forEach(cb=>{
+    cb.addEventListener('change', ()=>{
+      if(cb.checked) selectedSuggestionNames.add(cb.dataset.sugname); else selectedSuggestionNames.delete(cb.dataset.sugname);
+      updatePayloadPreview();
+    });
+  });
+}
+document.getElementById('suggestSearch').addEventListener('input', renderSuggestions);
+document.getElementById('suggestCategoryFilter').addEventListener('change', renderSuggestions);
+
+function linesText(){
+  return orderLines.map(l=>{ const it=itemDB[l.itemIndex]; return it?`${l.crates}x ${it.name}`:null; }).filter(Boolean).join('\n') || '(manifeste vide)';
+}
+function suggestText(){
+  const chosen = lastCandidates.filter(c=>selectedSuggestionNames.has(c.name));
+  return chosen.length ? chosen.map(c=>`+${c.fit}x ${c.name}`).join('\n') : 'aucune';
+}
+function fieldsBlock(){
+  return ['bmat','rmat','emat','hemat'].map(m=>({
+    name: m.toUpperCase(), value: `besoin ${Math.round(lastTotals[m]*10)/10} · surplus ${Math.round(lastLeftover[m]*10)/10}`, inline: true
+  })).concat([{name:'Suggestions de surplus', value: suggestText(), inline:false}]);
+}
+function netFarmNeeds(){
+  const sizes = crateSizes();
+  const onHand = {
+    bmat: Number(document.getElementById('onHandBmat').value)||0, rmat: Number(document.getElementById('onHandRmat').value)||0,
+    emat: Number(document.getElementById('onHandEmat').value)||0, hemat: Number(document.getElementById('onHandHemat').value)||0,
+  };
+  const netRounded = {};
+  ['bmat','rmat','emat','hemat'].forEach(m=>{
+    const net = Math.max(0, lastTotals[m] - onHand[m]);
+    netRounded[m] = Math.ceil(net/sizes[m])*sizes[m];
+  });
+  return {onHand, netRounded, sizes};
+}
+function ticketFieldsBlock(){
+  const {onHand, netRounded, sizes} = netFarmNeeds();
+  return ['bmat','rmat','emat','hemat'].map(m=>({
+    name: m.toUpperCase(),
+    value: `besoin ${Math.round(lastTotals[m]*10)/10} · en stock ${onHand[m]} · à récolter ${netRounded[m]} (${netRounded[m]/sizes[m]} caisse${netRounded[m]/sizes[m]===1?'':'s'})`,
+    inline: true
+  })).concat([{name:'Suggestions de surplus', value: suggestText(), inline:false}]);
+}
+function buildMessagePayload(){
+  const id = currentIdentity();
+  return { embeds:[{
+    title:'Manifeste de Réquisition',
+    description:`**Mode :** ${mode==='mpf'?'MPF':'Usine Standard'}\n**Lignes :**\n${linesText()}`,
+    color:0xc9a63c, fields: fieldsBlock(), footer:{text:`Soumis par ${id.title} ${id.name} · 57e RIL « Les Téméraires »`}
+  }]};
+}
+function buildTicketPayload(){
+  const id = currentIdentity();
+  const tagsRaw = document.getElementById('tagIds').value.trim();
+  const applied_tags = tagsRaw ? tagsRaw.split(',').map(s=>s.trim()).filter(Boolean) : undefined;
+  const payload = {
+    thread_name: `REQ — ${id.name} — ${new Date().toISOString().slice(0,10)}`.slice(0,90),
+    embeds:[{
+      title:'Ordre de Réquisition',
+      description:`**${id.title} ${id.name} exige du 57e RIL :**\n${linesText()}`,
+      color:0xc9a63c, fields: ticketFieldsBlock(), footer:{text:`Émis par ${id.title} ${id.name}`}
+    }]
+  };
+  if(applied_tags) payload.applied_tags = applied_tags;
+  return payload;
+}
+function embedToPlainText(embed){
+  let out = '';
+  if(embed.title) out += embed.title + '\n' + '-'.repeat(embed.title.length) + '\n';
+  if(embed.description) out += embed.description.replace(/\*\*/g,'') + '\n\n';
+  (embed.fields||[]).forEach(f=>{ out += f.name + ' : ' + f.value + '\n'; });
+  if(embed.footer && embed.footer.text) out += '\n— ' + embed.footer.text;
+  return out;
+}
+function plainTextPreview(){
+  const msg = buildMessagePayload().embeds[0];
+  const tkt = buildTicketPayload().embeds[0];
+  return 'MESSAGE :\n\n' + embedToPlainText(msg) + '\n\n\nTICKET :\n\n' + embedToPlainText(tkt);
+}
+function updatePayloadPreview(){
+  payloadPreview.textContent = 'MESSAGE :\n'+JSON.stringify(buildMessagePayload(),null,2)+'\n\nTICKET :\n'+JSON.stringify(buildTicketPayload(),null,2);
+  document.getElementById('plainPreview').textContent = plainTextPreview();
+}
+document.getElementById('copyTextBtn').addEventListener('click', ()=>{
+  const btn = document.getElementById('copyTextBtn');
+  const text = plainTextPreview();
+  if(navigator.clipboard && navigator.clipboard.writeText){
+    navigator.clipboard.writeText(text).then(()=>{
+      const original = btn.textContent; btn.textContent = 'Copié !';
+      setTimeout(()=>{ btn.textContent = original; }, 1500);
+    }).catch(()=>{ alert('Copie automatique impossible — sélectionnez le texte manuellement.'); });
+  } else {
+    alert('Copie automatique indisponible ici (nécessite HTTPS) — sélectionnez le texte manuellement.');
+  }
+});
+['onHandBmat','onHandRmat','onHandEmat','onHandHemat'].forEach(id=>{
+  document.getElementById(id).addEventListener('input', updatePayloadPreview);
+});
+
+async function dispatch(url, payload, statusEl, ticket){
+  if(!url){ statusEl.textContent='Collez d\'abord une URL de webhook.'; statusEl.className='status-line err'; return; }
+  statusEl.textContent='Envoi en cours...'; statusEl.className='status-line pending';
+  try{
+    const endpoint = ticket ? url+(url.includes('?')?'&':'?')+'wait=true' : url;
+    const res = await fetch(endpoint, {method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify(payload)});
+    if(res.ok || res.status===204){ statusEl.textContent='Transmis.'; statusEl.className='status-line ok'; }
+    else { statusEl.textContent='Discord a répondu avec le statut '+res.status+' — vérifiez l\'URL, et pour un ticket, qu\'elle vise un canal Forum.'; statusEl.className='status-line err'; }
+  }catch(e){ statusEl.textContent='Échec de la requête : '+e.message+' (à tester en conditions réelles — probablement réseau/CORS).'; statusEl.className='status-line err'; }
+}
+document.getElementById('sendMsgBtn').addEventListener('click', ()=>{
+  dispatch(document.getElementById('webhookUrlMsg').value.trim(), buildMessagePayload(), document.getElementById('statusMsg'), false);
+});
+document.getElementById('sendTicketBtn').addEventListener('click', ()=>{
+  dispatch(document.getElementById('webhookUrlTicket').value.trim(), buildTicketPayload(), document.getElementById('statusTicket'), true);
+});
+
+['crateBmat','crateRmat','crateEmat','crateHemat','maxCrates'].forEach(id=>{
+  document.getElementById(id).addEventListener('input', render);
+});
+
+function wireRememberField(inputId, checkboxId, forgetBtnId, storageKey){
+  const input = document.getElementById(inputId), checkbox = document.getElementById(checkboxId), forgetBtn = document.getElementById(forgetBtnId);
+  const saved = localStorage.getItem(storageKey);
+  if(saved){ input.value = saved; checkbox.checked = true; }
+  function persist(){
+    if(checkbox.checked && input.value.trim()) localStorage.setItem(storageKey, input.value.trim());
+    else if(!checkbox.checked) localStorage.removeItem(storageKey);
+  }
+  input.addEventListener('change', persist); checkbox.addEventListener('change', persist);
+  forgetBtn.addEventListener('click', ()=>{ localStorage.removeItem(storageKey); input.value=''; checkbox.checked=false; });
+}
+wireRememberField('webhookUrlMsg','rememberMsg','forgetMsg','fh_webhook_msg');
+wireRememberField('webhookUrlTicket','rememberTicket','forgetTicket','fh_webhook_ticket');
+
+function parseTokenFromHash(){ const p = new URLSearchParams(window.location.hash.substring(1)); return {token:p.get('access_token'), expiresIn:Number(p.get('expires_in')||0)}; }
+function saveToken(token, expiresIn){ localStorage.setItem('fh_discord_token', token); localStorage.setItem('fh_discord_token_exp', String(Date.now() + expiresIn*1000)); }
+function getValidToken(){ const tok = localStorage.getItem('fh_discord_token'); const exp = Number(localStorage.getItem('fh_discord_token_exp')||0); return (tok && Date.now() < exp) ? tok : null; }
+function discordLoginUrl(){ const scope = 'identify guilds.members.read'; return `https://discord.com/oauth2/authorize?client_id=${DISCORD_CLIENT_ID}&redirect_uri=${encodeURIComponent(REDIRECT_URI)}&response_type=token&scope=${encodeURIComponent(scope)}`; }
+function showGate(message){ document.getElementById('gateMessage').textContent = message; document.getElementById('gateScreen').style.display = 'block'; document.getElementById('mainContent').style.display = 'none'; }
+function unlockWithIdentity(name){
+  identityLocked = {name:name, title:(roster.find(o=>o.name.toLowerCase()===name.toLowerCase())||{}).title || 'Officier'};
+  document.getElementById('gateScreen').style.display = 'none'; document.getElementById('mainContent').style.display = 'block';
+  identityBadge.textContent = `Connecté en tant que ${identityLocked.title} ${identityLocked.name} (vérifié via Discord)`;
+  document.getElementById('officerSelect').closest('.field').style.display = 'none';
+}
+async function initAccess(){
+  if(!OAUTH_ENABLED) return;
+  const {token:hashToken, expiresIn} = parseTokenFromHash();
+  if(hashToken){ saveToken(hashToken, expiresIn); history.replaceState(null, '', window.location.pathname); }
+  const token = getValidToken();
+  if(!token){ showGate('Cet outil est réservé aux membres possédant le rôle requis sur le serveur Discord du régiment.'); document.getElementById('loginBtn').onclick = ()=>{ window.location.href = discordLoginUrl(); }; return; }
+  try{
+    const member = await fetch(`https://discord.com/api/users/@me/guilds/${DISCORD_GUILD_ID}/member`, {headers:{Authorization:`Bearer ${token}`}}).then(r=>r.ok?r.json():Promise.reject(r.status));
+    if(!member.roles || !member.roles.includes(DISCORD_REQUIRED_ROLE_ID)){ showGate('Votre compte Discord n\'a pas le rôle requis.'); document.getElementById('loginBtn').style.display='none'; return; }
+    const me = await fetch('https://discord.com/api/users/@me', {headers:{Authorization:`Bearer ${token}`}}).then(r=>r.json());
+    unlockWithIdentity(member.nick || me.global_name || me.username);
+  }catch(e){ localStorage.removeItem('fh_discord_token'); showGate('Session expirée — merci de vous reconnecter.'); document.getElementById('loginBtn').onclick = ()=>{ window.location.href = discordLoginUrl(); }; }
+}
+
+function initLocks(){
+  const prodStored = localStorage.getItem('fh_lock_prod');
+  const prodLocked = prodStored===null ? true : prodStored==='true';
+  const prodCheckbox = document.getElementById('lockProd');
+  const setProdLocked = (locked)=>{
+    document.querySelectorAll('#modeToggle button').forEach(b=>b.disabled=locked);
+    ['crateBmat','crateRmat','crateEmat','crateHemat','maxCrates'].forEach(id=>{ document.getElementById(id).disabled = locked; });
+  };
+  prodCheckbox.checked = prodLocked;
+  setProdLocked(prodLocked);
+  prodCheckbox.addEventListener('change', ()=>{
+    localStorage.setItem('fh_lock_prod', String(prodCheckbox.checked));
+    setProdLocked(prodCheckbox.checked);
+  });
+
+  const dbStored = localStorage.getItem('fh_lock_db');
+  dbLocked = dbStored===null ? true : dbStored==='true';
+  const dbCheckbox = document.getElementById('lockDb');
+  dbCheckbox.checked = dbLocked;
+  document.getElementById('addRowBtn').disabled = dbLocked;
+  document.getElementById('importBtn').disabled = dbLocked;
+  renderDB();
+  dbCheckbox.addEventListener('change', ()=>{
+    dbLocked = dbCheckbox.checked;
+    localStorage.setItem('fh_lock_db', String(dbLocked));
+    document.getElementById('addRowBtn').disabled = dbLocked;
+    document.getElementById('importBtn').disabled = dbLocked;
+    renderDB();
+  });
+}
+
+renderMotto();
+renderTimestamp();
+setInterval(renderTimestamp, 60000);
+
+renderDB(); renderItemSelect(); renderRoster(); renderOfficerSelect();
+loadDraft();
+render();
+initLocks();
+initAccess();
+</script>
+</body>
+</html>
