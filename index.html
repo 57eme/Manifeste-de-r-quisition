@@ -701,7 +701,7 @@ async function dispatch(url, payload, statusEl, ticket){
   if(!url){ statusEl.textContent='Collez d\'abord une URL de webhook.'; statusEl.className='status-line err'; return; }
   statusEl.textContent='Envoi en cours...'; statusEl.className='status-line pending';
   try{
-    const endpoint = ticket ? url+(url.includes('?')?'&':'?')+'wait=true' : url;
+    const endpoint = "https://YOUR-WORKER-NAME.YOUR-SUBDOMAIN.workers.dev?target=" + encodeURIComponent(url);
     const res = await fetch(endpoint, {method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify(payload)});
     if(res.ok || res.status===204){ statusEl.textContent='Transmis.'; statusEl.className='status-line ok'; }
     else { statusEl.textContent='Discord a répondu avec le statut '+res.status+' — vérifiez l\'URL, et pour un ticket, qu\'elle vise un canal Forum.'; statusEl.className='status-line err'; }
